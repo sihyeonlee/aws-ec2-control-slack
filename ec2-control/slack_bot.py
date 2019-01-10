@@ -1,33 +1,37 @@
 from slacker import Slacker
 from call_token import *
+from aws_control import *
 import json
 import asyncio
 import websockets
 
-token = return_token('slack')               # Get Slack Token
+token = return_token('slack')
 slack = Slacker(token)
 
-response = slack.rtm.start()                # Start RTM
+response = slack.rtm.start()
 message_url = response.body['url']
 
 
-def filter_message(message_json):           # Filtering Message & Parsing
+def filter_message(message_json):
     message = json.loads(message_json)
+    return_message = False
 
     if message['type'] == 'message':
         text = message['text']
 
         if text == 'start':
-            pass                            # Start_Instance
-        elif text == 'kill':
-            pass                            # Stop_Instance
+            return_message = server_start()
+        elif text == 'stop':
+            return_message = server_stop()
         elif text == 'status':
-            pass                            # Return_Instance_Status
+            return_message = server_status()
         else:
-            pass                            # Return_Nothing
+            pass
 
     else:
-        pass                                # Return_Nothing
+        pass
+
+    return return_message
 
 
 async def get_message():
@@ -35,7 +39,9 @@ async def get_message():
 
     while True:
         message_json = await message_ws.recv()
-        filter_message(message_json)
+        return_message = filter_message(message_json)
+        if return_message:
+            slack.chat.post_message('#general', return_message, as_user=True)
 
 
 loop = asyncio.new_event_loop()
