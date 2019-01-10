@@ -13,6 +13,11 @@ def return_status(type, response):
     elif type == 'server_stop':
         instance_status = response['StoppingInstances'][0]['CurrentState']['Name']
     elif type == 'server_status':
+        if response['InstanceStatuses'] == []:
+            instance_status = 'stopped'
+
+            return instance_status
+
         instance_status = response['InstanceStatuses'][0]['InstanceState']['Name']
     else:
         pass
