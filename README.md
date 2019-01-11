@@ -7,6 +7,18 @@ aws-ec2-control-slack은 Slack에서 AmazonWebService EC2 Instance를 제어하�
 
 start / stop / status 3가지 명령어를 통해 제어할 수 있습니다.
 
+## System_Info
+### Dev_System
+- OS : `Windows 10`
+- Python Version : `3.7.2`
+- Python Package : `venv(requirements.txt 참조)`
+
+### Run_System
+- AWS EC2 Instance Type : `t2.micro`
+- OS : `Amazon Linux 2018.03`
+- Python Version : `3.5.6`
+- Python Package : `requirements.txt 참조`
+
 ## Source_Tree
 - slack_bot.py
     - get_message()
@@ -39,6 +51,7 @@ start / stop / status 3가지 명령어를 통해 제어할 수 있습니다.
         - call_name에 해당하는 token 값을 return 합니다.
         
 ## Dev-Log
+- 2019-01-12 중대한 오류[#1 #2] 수정 및 예외 처리 추가
 - 2019-01-11 v0.1(start / stop / status) 구현
 - 2019-01-10 개발 시작
 
