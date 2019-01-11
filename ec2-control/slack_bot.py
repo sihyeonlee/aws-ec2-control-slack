@@ -18,7 +18,7 @@ def filter_message(message_json):
     message = json.loads(message_json)
     return_message = False
 
-    if message['type'] == 'message':
+    if message['type'] == 'message' and not('subtype' in message):
         text = message['text']
 
         if text == 'start':
