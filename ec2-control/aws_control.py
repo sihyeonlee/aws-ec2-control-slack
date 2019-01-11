@@ -9,16 +9,15 @@ def return_status(type, response):
     instance_status = None
 
     if type == 'server_start':
+        if response == 0:
+            return 'Please wait stopping process'
+
         instance_status = response['StartingInstances'][0]['CurrentState']['Name']
+
     elif type == 'server_stop':
         instance_status = response['StoppingInstances'][0]['CurrentState']['Name']
     elif type == 'server_status':
-        if response['InstanceStatuses'] == []:
-            instance_status = 'stopped'
-
-            return instance_status
-
-        instance_status = response['InstanceStatuses'][0]['InstanceState']['Name']
+        instance_status = response['Reservations'][0]['Instances'][0]['State']['Name']
     else:
         pass
 
@@ -26,7 +25,15 @@ def return_status(type, response):
 
 
 def server_start():
+    n_status = server_status()
+
+    if n_status == 'stopping':
+        response = 0
+
+        return return_status('server_start', response)
+
     response = client.start_instances(InstanceIds=[return_instance()])
+
     return return_status('server_start', response)
 
 
@@ -36,5 +43,9 @@ def server_stop():
 
 
 def server_status():
-    response = client.describe_instance_status(InstanceIds=[return_instance()])
+    response = client.describe_instances(
+        Filters=[],
+        InstanceIds=[return_instance()]
+    )
+
     return return_status('server_status', response)

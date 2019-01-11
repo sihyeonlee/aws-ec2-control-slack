@@ -4,6 +4,8 @@ from aws_control import *
 import json
 import asyncio
 import websockets
+import os
+
 
 token = return_token('slack')
 slack = Slacker(token)
@@ -43,8 +45,14 @@ async def get_message():
         if return_message:
             slack.chat.post_message('#general', return_message, as_user=True)
 
+try:
+    slack.chat.post_message('#general', 'Hello, There!', as_user=True)
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    asyncio.get_event_loop().run_until_complete(get_message())
+    asyncio.get_event_loop().run_forever()
 
-loop = asyncio.new_event_loop()
-asyncio.set_event_loop(loop)
-asyncio.get_event_loop().run_until_complete(get_message())
-asyncio.get_event_loop().run_forever()
+except:
+    slack.chat.post_message('#general', 'WARNING!', as_user=True)
+    slack.chat.post_message('#general', 'Server will reboot', as_user=True)
+    os.system('sudo reboot now')
